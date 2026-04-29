@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "app.Main",
+            "projectName": "java_8d72f9dc"
+        },
+        {
+            "type": "java",
+            "name": "Run Main",
+            "request": "launch",
+            "mainClass": "app.Main",
+            "projectName": "java",
+            "classPaths": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/lib/sqlite-jdbc-3.53.0.0.jar",
+                "${workspaceFolder}/lib/jcalendar-1.4.jar"
+            ]
+        }
+    ]
+}
