@@ -48,6 +48,7 @@ public class EtudiantDAO {
     public void supprimer(int id) throws SQLException {
         String deleteAbsences = "DELETE FROM Absence WHERE idEtudiant = ?";
         String deleteRetards = "DELETE FROM Retard WHERE idEtudiant = ?";
+        String deleteStudentUsers = "DELETE FROM Utilisateur WHERE role = 'ETUDIANT' AND idEtudiant = ?";
         String deleteEtudiant = "DELETE FROM Etudiant WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection()) {
@@ -55,6 +56,7 @@ public class EtudiantDAO {
 
             try (PreparedStatement absencesStatement = connection.prepareStatement(deleteAbsences);
                  PreparedStatement retardsStatement = connection.prepareStatement(deleteRetards);
+                 PreparedStatement usersStatement = connection.prepareStatement(deleteStudentUsers);
                  PreparedStatement etudiantStatement = connection.prepareStatement(deleteEtudiant)) {
 
                 absencesStatement.setInt(1, id);
@@ -62,6 +64,9 @@ public class EtudiantDAO {
 
                 retardsStatement.setInt(1, id);
                 retardsStatement.executeUpdate();
+
+                usersStatement.setInt(1, id);
+                usersStatement.executeUpdate();
 
                 etudiantStatement.setInt(1, id);
                 if (etudiantStatement.executeUpdate() == 0) {

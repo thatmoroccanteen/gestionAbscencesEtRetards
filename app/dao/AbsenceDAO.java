@@ -98,26 +98,41 @@ public class AbsenceDAO {
     }
 
     public List<AbsenceView> listerTousAvecEtudiant() throws SQLException {
+        return listerAvecEtudiant(null);
+    }
+
+    public List<AbsenceView> listerParEtudiant(int idEtudiant) throws SQLException {
+        return listerAvecEtudiant(idEtudiant);
+    }
+
+    private List<AbsenceView> listerAvecEtudiant(Integer idEtudiant) throws SQLException {
         List<AbsenceView> absences = new ArrayList<>();
         String sql = "SELECT a.id, a.date, a.motif, a.duree, a.idEtudiant, e.nom, e.prenom " +
                 "FROM Absence a " +
-                "LEFT JOIN Etudiant e ON a.idEtudiant = e.id " +
-                "ORDER BY a.id";
+                "LEFT JOIN Etudiant e ON a.idEtudiant = e.id";
+        if (idEtudiant != null) {
+            sql += " WHERE a.idEtudiant = ?";
+        }
+        sql += " ORDER BY a.id";
 
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            if (idEtudiant != null) {
+                statement.setInt(1, idEtudiant);
+            }
 
-            while (resultSet.next()) {
-                absences.add(new AbsenceView(
-                        resultSet.getInt("id"),
-                        resultSet.getString("date"),
-                        resultSet.getString("motif"),
-                        resultSet.getInt("duree"),
-                        resultSet.getInt("idEtudiant"),
-                        resultSet.getString("nom"),
-                        resultSet.getString("prenom")
-                ));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    absences.add(new AbsenceView(
+                            resultSet.getInt("id"),
+                            resultSet.getString("date"),
+                            resultSet.getString("motif"),
+                            resultSet.getInt("duree"),
+                            resultSet.getInt("idEtudiant"),
+                            resultSet.getString("nom"),
+                            resultSet.getString("prenom")
+                    ));
+                }
             }
         }
 

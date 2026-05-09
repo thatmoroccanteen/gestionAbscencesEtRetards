@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -40,6 +40,7 @@ public class TotauxFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel content = new JPanel(new GridBagLayout());
+        content.setBackground(UITheme.BG_FRAME);
         content.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
 
         addRow(content, 0, "ID etudiant", idEtudiantField);
@@ -47,11 +48,13 @@ public class TotauxFrame extends JFrame {
         addRow(content, 2, "Heures de retards", heuresRetardsLabel);
         addRow(content, 3, "Heures d'absences", heuresAbsencesLabel);
 
-        totalLabel.setFont(totalLabel.getFont().deriveFont(Font.BOLD, 18f));
+        totalLabel.setFont(UITheme.FONT_TITLE);
+        totalLabel.setForeground(UITheme.PRIMARY_DARK);
         addRow(content, 4, "Total", totalLabel);
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton calculerButton = new JButton("Calculer");
+        buttons.setBackground(UITheme.BG_FRAME);
+        JButton calculerButton = UITheme.primaryButton("Calculer");
         calculerButton.addActionListener(e -> calculer());
         buttons.add(calculerButton);
 
@@ -65,7 +68,10 @@ public class TotauxFrame extends JFrame {
         labelConstraints.gridy = row;
         labelConstraints.insets = new Insets(6, 6, 6, 12);
         labelConstraints.anchor = GridBagConstraints.EAST;
-        panel.add(new JLabel(label), labelConstraints);
+        JLabel labelComponent = new JLabel(label);
+        labelComponent.setFont(UITheme.FONT_BODY);
+        labelComponent.setForeground(UITheme.TEXT_SECONDARY);
+        panel.add(labelComponent, labelConstraints);
 
         GridBagConstraints componentConstraints = new GridBagConstraints();
         componentConstraints.gridx = 1;
@@ -75,6 +81,8 @@ public class TotauxFrame extends JFrame {
         componentConstraints.fill = GridBagConstraints.HORIZONTAL;
         componentConstraints.weightx = 1.0;
         panel.add(component, componentConstraints);
+        component.setFont(row == 4 ? UITheme.FONT_TITLE : UITheme.FONT_BODY);
+        component.setForeground(row == 4 ? UITheme.PRIMARY_DARK : Color.BLACK);
     }
 
     private void calculer() {
