@@ -129,6 +129,9 @@ public class GestionUtilisateursFrame extends JFrame {
             int idEtudiant = parseIdEtudiant();
             validateEtudiantLink(role, idEtudiant);
 
+            if (utilisateurDAO.usernameExistePourAutre(username, id))
+                throw new IllegalArgumentException("Cet identifiant existe deja.");
+
             Utilisateur u = new Utilisateur(id, username, "", role, idEtudiant);
             utilisateurDAO.modifier(u);
 

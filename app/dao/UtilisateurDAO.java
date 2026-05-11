@@ -74,7 +74,8 @@ public class UtilisateurDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, hashPassword(newPassword));
             stmt.setInt(2, id);
-            stmt.executeUpdate();
+            if (stmt.executeUpdate() == 0)
+                throw new SQLException("Aucun utilisateur trouve avec cet ID.");
         }
     }
 
@@ -104,6 +105,18 @@ public class UtilisateurDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        }
+    }
+
+    public boolean usernameExistePourAutre(String username, int id) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Utilisateur WHERE username = ? AND id <> ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setInt(2, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next() && rs.getInt(1) > 0;
             }

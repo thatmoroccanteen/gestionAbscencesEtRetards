@@ -121,7 +121,7 @@ public class RetardDAO {
         return retards;
     }
 
-    public int totalHeuresParEtudiant(int idEtudiant) throws SQLException {
+    public int totalMinutesParEtudiant(int idEtudiant) throws SQLException {
         String sql = "SELECT COALESCE(SUM(duree), 0) AS total FROM Retard WHERE idEtudiant = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -137,6 +137,10 @@ public class RetardDAO {
         }
 
         return 0;
+    }
+
+    public int totalHeuresParEtudiant(int idEtudiant) throws SQLException {
+        return totalMinutesParEtudiant(idEtudiant);
     }
 
     private Retard extraireRetard(ResultSet resultSet) throws SQLException {

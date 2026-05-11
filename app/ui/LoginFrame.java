@@ -12,6 +12,8 @@ import java.sql.SQLException;
 
 public class LoginFrame extends JDialog {
     private static final long serialVersionUID = 1L;
+    private static final String USERNAME_PLACEHOLDER = "ex: admin";
+    private static final String PASSWORD_PLACEHOLDER = "mot de passe";
 
     private final JTextField usernameField = new JTextField(35);
     private final JPasswordField passwordField = new JPasswordField(35);
@@ -102,8 +104,8 @@ public class LoginFrame extends JDialog {
         passwordField.addActionListener(e -> tentativeConnexion());
 
         // Add placeholders
-        addPlaceholder(usernameField, "ex: admin", false);
-        addPlaceholder(passwordField, "mot de passe", true);
+        addPlaceholder(usernameField, USERNAME_PLACEHOLDER, false);
+        addPlaceholder(passwordField, PASSWORD_PLACEHOLDER, true);
 
         buttons.add(cancelBtn);
         buttons.add(loginBtn);
@@ -147,6 +149,13 @@ public class LoginFrame extends JDialog {
     private void tentativeConnexion() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword());
+
+        if (USERNAME_PLACEHOLDER.equals(username)) {
+            username = "";
+        }
+        if (PASSWORD_PLACEHOLDER.equals(password)) {
+            password = "";
+        }
 
         if (username.isEmpty() || password.isEmpty()) {
             errorLabel.setText("Veuillez remplir tous les champs.");

@@ -29,7 +29,7 @@ public class TotauxFrame extends JFrame {
 
     private final JTextField idEtudiantField = new JTextField(10);
     private final JLabel etudiantLabel = new JLabel("-");
-    private final JLabel heuresRetardsLabel = new JLabel("0");
+    private final JLabel minutesRetardsLabel = new JLabel("0");
     private final JLabel heuresAbsencesLabel = new JLabel("0");
     private final JLabel totalLabel = new JLabel("0");
 
@@ -45,7 +45,7 @@ public class TotauxFrame extends JFrame {
 
         addRow(content, 0, "ID etudiant", idEtudiantField);
         addRow(content, 1, "Etudiant", etudiantLabel);
-        addRow(content, 2, "Heures de retards", heuresRetardsLabel);
+        addRow(content, 2, "Minutes de retards", minutesRetardsLabel);
         addRow(content, 3, "Heures d'absences", heuresAbsencesLabel);
 
         totalLabel.setFont(UITheme.FONT_TITLE);
@@ -96,19 +96,19 @@ public class TotauxFrame extends JFrame {
 
             if (etudiant == null) {
                 etudiantLabel.setText("Etudiant introuvable");
-                heuresRetardsLabel.setText("0");
+                minutesRetardsLabel.setText("0");
                 heuresAbsencesLabel.setText("0");
                 totalLabel.setText("0");
                 return;
             }
 
-            int heuresRetards = retardDAO.totalHeuresParEtudiant(idEtudiant);
+            int minutesRetards = retardDAO.totalMinutesParEtudiant(idEtudiant);
             int heuresAbsences = absenceDAO.totalHeuresParEtudiant(idEtudiant);
 
             etudiantLabel.setText(etudiant.getNom() + " " + etudiant.getPrenom());
-            heuresRetardsLabel.setText(String.valueOf(heuresRetards));
+            minutesRetardsLabel.setText(String.valueOf(minutesRetards));
             heuresAbsencesLabel.setText(String.valueOf(heuresAbsences));
-            totalLabel.setText(String.valueOf(heuresRetards + heuresAbsences));
+            totalLabel.setText(formatHeuresMinutes(heuresAbsences, minutesRetards));
         } catch (NumberFormatException e) {
             showError("ID etudiant doit etre un nombre.");
         } catch (IllegalArgumentException e) {
@@ -120,5 +120,10 @@ public class TotauxFrame extends JFrame {
 
     private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private String formatHeuresMinutes(int heures, int minutes) {
+        int totalMinutes = heures * 60 + minutes;
+        return (totalMinutes / 60) + " h " + (totalMinutes % 60) + " min";
     }
 }
